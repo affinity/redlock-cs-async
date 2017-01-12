@@ -1,11 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redlock-cs.tests.v4.5", "tests\redlock-cs.tests.v4.5.csproj", "{2B892971-1410-4F89-B179-71B53132E6F8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redlock-cs.v4.5", "src\redlock-cs.v4.5.csproj", "{C9765FBE-82AC-4A30-8B43-112A79957DC3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EB64A525-5542-443F-84D5-9E016CB743CA}"
+	ProjectSection(SolutionItems) = preProject
+		build.ps1 = build.ps1
+		default.ps1 = default.ps1
+		LICENSE = LICENSE
+		README.md = README.md
+		redlock-cs.nuspec = redlock-cs.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

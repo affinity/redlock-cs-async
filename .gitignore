@@ -184,3 +184,4 @@ FakesAssemblies/
 
 #ApiKey
 apikey.txt
+psake.psm1
