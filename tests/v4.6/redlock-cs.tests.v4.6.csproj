@@ -67,11 +67,4 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="BeforeBuild">
-    <ItemGroup>
-      <Content Include="$(SolutionDir)\packages\Redis-32.2.6.12.1\tools\*.*">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-    </ItemGroup>
-  </Target>
 </Project>

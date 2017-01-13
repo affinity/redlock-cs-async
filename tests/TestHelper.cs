@@ -9,7 +9,8 @@ namespace Redlock.CSharp.Tests
     {
         public static Process StartRedisServer(long port)
         {
-            var fileName = GetRedisServerLocation();
+            var toolsPath = Path.Combine(GetRepoRoot(), @"packages\Redis-32.2.6.12.1\tools");
+            var fileName = Path.Combine(toolsPath, "redis-server.exe");
 
             // Launch Server
             var process = new Process
@@ -40,15 +41,17 @@ namespace Redlock.CSharp.Tests
             return process;
         }
 
-        private static string GetRedisServerLocation()
+        private static string GetRepoRoot()
         {
             var appVeyor = Environment.GetEnvironmentVariable("APPVEYOR_BUILD_FOLDER");
             if (!string.IsNullOrEmpty(appVeyor))
             {
-                return Path.Combine(appVeyor, "tests", "bin", "Release", "redis-server.exe");
+                return appVeyor;
             }
             var assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            return Path.Combine(assemblyDir, "redis-server.exe");
+            return Path.Combine(assemblyDir, @"..\..\..\..\");
         }
+
+        
     }
 }
