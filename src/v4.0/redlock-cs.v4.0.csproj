@@ -66,11 +66,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\Lock.cs">
       <Link>Lock.cs</Link>
-    </Compile>
-    <Compile Include="..\Properties\AssemblyInfo.cs">
-      <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\Redlock.cs">
       <Link>Redlock.cs</Link>
