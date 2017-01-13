@@ -14,8 +14,6 @@ build:
 after_build:
 - cmd: nuget pack redlock-cs.nuspec -Properties "version=%APPVEYOR_BUILD_VERSION%"
 test:
-  assemblies:
-  - tests\v4.5\bin\Release\Redlock.CSharp.Tests.dll
-  - tests\v4.6\bin\Release\Redlock.CSharp.Tests.dll
+  assemblies: tests\*\bin\Release\Redlock.CSharp.Tests.dll
 artifacts:
 - path: redlock-cs-async.*.nupkg
