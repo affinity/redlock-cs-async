@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>redlock-cs-async</id>
-    <version>1.0.0.1</version>
+    <version>$version$</version>
     <authors>collinsauve</authors>
     <owners>collinsauve</owners>
     <licenseUrl>https://raw.githubusercontent.com/collinsauve/redlock-cs/master/LICENSE</licenseUrl>
