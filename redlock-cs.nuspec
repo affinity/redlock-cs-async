@@ -12,13 +12,13 @@
     <description>Asynchronous distributed lock with Redis and C# (based on http://redis.io/topics/distlock)</description>
     <tags>redis redlock lock async</tags>
     <dependencies>
-      <dependency id="StackExchange.Redis" version="1.0.371" />
+      <dependency id="StackExchange.Redis" version="1.2.0" />
     </dependencies>
   </metadata>
   <files>
-    <file src="src\v4.0\bin\Release\Redlock.CSharp.dll" target="lib\net40" />
-    <file src="src\v4.0\bin\Release\Redlock.CSharp.pdb" target="lib\net40" />
     <file src="src\v4.5\bin\Release\Redlock.CSharp.dll" target="lib\net45" />
     <file src="src\v4.5\bin\Release\Redlock.CSharp.pdb" target="lib\net45" />
+    <file src="src\v4.6\bin\Release\Redlock.CSharp.dll" target="lib\net46" />
+    <file src="src\v4.6\bin\Release\Redlock.CSharp.pdb" target="lib\net46" />
   </files>
 </package>
