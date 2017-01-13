@@ -9,8 +9,7 @@ namespace Redlock.CSharp.Tests
     {
         public static Process StartRedisServer(long port)
         {
-            var assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var fileName = Path.Combine(assemblyDir, "redis-server.exe");
+            var fileName = GetRedisServerLocation();
 
             // Launch Server
             var process = new Process
@@ -31,7 +30,7 @@ namespace Redlock.CSharp.Tests
             {
                 Console.WriteLine($"Attempt to launch {fileName} failed.");
                 Console.WriteLine("Directory listing:");
-                foreach (var file in Directory.GetFiles(assemblyDir))
+                foreach (var file in Directory.GetFiles(Path.GetDirectoryName(fileName)))
                 {
                     Console.WriteLine($"\t{Path.GetFileName(file)}");
                 }
@@ -39,6 +38,17 @@ namespace Redlock.CSharp.Tests
             }
 
             return process;
+        }
+
+        private static string GetRedisServerLocation()
+        {
+            var appVeyor = Environment.GetEnvironmentVariable("APPVEYOR_BUILD_FOLDER");
+            if (!string.IsNullOrEmpty(appVeyor))
+            {
+                return Path.Combine(appVeyor, "tests", "bin", "Release", "redis-server.exe");
+            }
+            var assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            return Path.Combine(assemblyDir, "redis-server.exe");
         }
     }
 }
