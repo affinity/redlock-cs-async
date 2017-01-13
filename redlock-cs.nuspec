@@ -16,9 +16,9 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="Staging\v4.0\Redlock.CSharp.dll" target="lib\net40" />
-    <file src="Staging\v4.0\Redlock.CSharp.pdb" target="lib\net40" />
-    <file src="Staging\v4.5\Redlock.CSharp.dll" target="lib\net45" />
-    <file src="Staging\v4.5\Redlock.CSharp.pdb" target="lib\net45" />
+    <file src="src\v4.0\bin\Release\Redlock.CSharp.dll" target="lib\net40" />
+    <file src="src\v4.0\bin\Release\Redlock.CSharp.pdb" target="lib\net40" />
+    <file src="src\v4.5\bin\Release\Redlock.CSharp.dll" target="lib\net45" />
+    <file src="src\v4.5\bin\Release\Redlock.CSharp.pdb" target="lib\net45" />
   </files>
 </package>
