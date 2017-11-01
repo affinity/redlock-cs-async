@@ -25,11 +25,11 @@ namespace Redlock.CSharp
     public class Lock
     {
 
-        public RedisKey Resource { get; private set; }
+        public RedisKey Resource { get; }
 
-        public RedisValue Value { get; private set; }
+        public RedisValue Value { get; }
 
-        public TimeSpan Validity { get; private set; }
+        public TimeSpan Validity { get; }
 
         public Lock(RedisKey resource, RedisValue val, TimeSpan validity)
         {

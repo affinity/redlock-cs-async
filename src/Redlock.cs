@@ -33,7 +33,7 @@ namespace Redlock.CSharp
         /// <summary>
         /// String containing the Lua unlock script.
         /// </summary>
-        const String UnlockScript = @"
+        private const string UnlockScript = @"
             if redis.call(""get"",KEYS[1]) == ARGV[1] then
                 return redis.call(""del"",KEYS[1])
             else
@@ -44,7 +44,7 @@ namespace Redlock.CSharp
         private const double ClockDriveFactor = 0.01;
         private readonly TimeSpan _defaultRetryDelay = TimeSpan.FromMilliseconds(200);
         private readonly IList<ConnectionMultiplexer> _connections;
-        private int Quorum => (_connections.Count / 2) + 1;
+        private int Quorum => _connections.Count / 2 + 1;
 
         public Redlock(params ConnectionMultiplexer[] connections)
         {
@@ -72,19 +72,20 @@ namespace Redlock.CSharp
                     var startTime = DateTime.Now;
 
                     // Use keys
-                    await ForEachRedisRegistered(
-                        async connection =>
+                    await ForEachRedisRegistered(async connection =>
+                    {
+                        if (await LockInstance(connection, resource, val, ttl))
                         {
-                            if (await LockInstance(connection, resource, val, ttl)) n += 1;
+                            n += 1;
                         }
-                    );
+                    });
 
                     /*
                      * Add 2 milliseconds to the drift to account for Redis expires
                      * precision, which is 1 milliescond, plus 1 millisecond min drift 
                      * for small TTLs.        
                      */
-                    var drift = Convert.ToInt32((ttl.TotalMilliseconds*ClockDriveFactor) + 2);
+                    var drift = Convert.ToInt32(ttl.TotalMilliseconds * ClockDriveFactor + 2);
                     var validityTime = ttl - (DateTime.Now - startTime) - new TimeSpan(0, 0, 0, 0, drift);
 
                     if (n >= Quorum && validityTime.TotalMilliseconds > 0)
@@ -104,14 +105,11 @@ namespace Redlock.CSharp
             return Tuple.Create(successfull, lockObject);
         }
 
-        public void Unlock(Lock lockObject)
-        {
-            UnlockAsync(lockObject).Wait();
-        }
+        public void Unlock(Lock lockObject) => UnlockAsync(lockObject).Wait();
 
-        public async Task UnlockAsync(Lock lockObject)
+        public Task UnlockAsync(Lock lockObject)
         {
-            await ForEachRedisRegistered(async connection => await UnlockInstance(connection, lockObject.Resource, lockObject.Value));
+            return ForEachRedisRegistered(connection => UnlockInstance(connection, lockObject.Resource, lockObject.Value));
         }
 
         public override string ToString()
@@ -142,12 +140,12 @@ namespace Redlock.CSharp
         }
 
         //TODO: Refactor passing a ConnectionMultiplexer
-        private static async Task UnlockInstance(ConnectionMultiplexer connection, string resource, byte[] val)
+        private static Task UnlockInstance(ConnectionMultiplexer connection, string resource, byte[] val)
         {
             RedisKey[] key = { resource };
             RedisValue[] values = { val };
             var redis = connection;
-            await redis.GetDatabase().ScriptEvaluateAsync(
+            return redis.GetDatabase().ScriptEvaluateAsync(
                 UnlockScript,
                 key,
                 values
