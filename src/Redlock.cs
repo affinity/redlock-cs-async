@@ -22,7 +22,6 @@ using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace Redlock.CSharp
@@ -43,12 +42,23 @@ namespace Redlock.CSharp
         private const int DefaultRetryCount = 3;
         private const double ClockDriveFactor = 0.01;
         private readonly TimeSpan _defaultRetryDelay = TimeSpan.FromMilliseconds(200);
-        private readonly IList<ConnectionMultiplexer> _connections;
-        private int Quorum => _connections.Count / 2 + 1;
+        private readonly IList<IDatabaseAsync> _databases;
+        private int Quorum => _databases.Count / 2 + 1;
 
-        public Redlock(params ConnectionMultiplexer[] connections)
+        [Obsolete("Use constructors (IDatabaseAsync[]) or (IEnumerable<IDatabaseAsync>)")]
+        public Redlock(params IConnectionMultiplexer[] connections)
+            : this(connections.Select(_ => _.GetDatabase()))
         {
-            _connections = connections.ToList().AsReadOnly();
+        }
+
+        public Redlock(params IDatabaseAsync[] databases)
+            : this((IEnumerable<IDatabaseAsync>)databases)
+        {
+        }
+
+        public Redlock(IEnumerable<IDatabaseAsync> databases)
+        {
+            _databases = databases.ToList().AsReadOnly();
         }
 
         public bool Lock(RedisKey resource, TimeSpan ttl, out Lock lockObject)
@@ -72,9 +82,9 @@ namespace Redlock.CSharp
                     var startTime = DateTime.Now;
 
                     // Use keys
-                    await ForEachRedisRegistered(async connection =>
+                    await ForEachRedisRegistered(async database =>
                     {
-                        if (await LockInstance(connection, resource, val, ttl))
+                        if (await LockInstance(database, resource, val, ttl))
                         {
                             n += 1;
                         }
@@ -93,7 +103,7 @@ namespace Redlock.CSharp
                         lockObject = new Lock(resource, val, validityTime);
                         return true;
                     }
-                    await ForEachRedisRegistered(connection => UnlockInstance(connection, resource, val));
+                    await ForEachRedisRegistered(database => UnlockInstance(database, resource, val));
                     return false;
                 }
                 catch (Exception)
@@ -109,29 +119,14 @@ namespace Redlock.CSharp
 
         public Task UnlockAsync(Lock lockObject)
         {
-            return ForEachRedisRegistered(connection => UnlockInstance(connection, lockObject.Resource, lockObject.Value));
+            return ForEachRedisRegistered(database => UnlockInstance(database, lockObject.Resource, lockObject.Value));
         }
 
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine(GetType().FullName);
-
-            sb.AppendLine("Registered Connections:");
-            foreach (var item in _connections)
-            {
-                sb.AppendLine(item.GetEndPoints().First().ToString());
-            }
-
-            return sb.ToString();
-        }
-
-        //TODO: Refactor passing a ConnectionMultiplexer
-        private static async Task<bool> LockInstance(IConnectionMultiplexer connection, string resource, byte[] val, TimeSpan ttl)
+        private static async Task<bool> LockInstance(IDatabaseAsync database, string resource, byte[] val, TimeSpan ttl)
         {
             try
             {
-                return await connection.GetDatabase().StringSetAsync(resource, val, ttl, When.NotExists);
+                return await database.StringSetAsync(resource, val, ttl, When.NotExists);
             }
             catch (Exception)
             {
@@ -139,24 +134,22 @@ namespace Redlock.CSharp
             }
         }
 
-        //TODO: Refactor passing a ConnectionMultiplexer
-        private static Task UnlockInstance(ConnectionMultiplexer connection, string resource, byte[] val)
+        private static Task UnlockInstance(IDatabaseAsync database, string resource, byte[] val)
         {
             RedisKey[] key = { resource };
             RedisValue[] values = { val };
-            var redis = connection;
-            return redis.GetDatabase().ScriptEvaluateAsync(
+            return database.ScriptEvaluateAsync(
                 UnlockScript,
                 key,
                 values
             );
         }
 
-        private async Task ForEachRedisRegistered(Func<ConnectionMultiplexer, Task> action)
+        private async Task ForEachRedisRegistered(Func<IDatabaseAsync, Task> action)
         {
-            foreach (var connection in _connections)
+            foreach (var database in _databases)
             {
-                await action(connection);
+                await action(database);
             }
         }
 

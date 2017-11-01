@@ -32,31 +32,29 @@ namespace Redlock.CSharp.Tests
         [Test]
         public void TestWhenLockedAnotherLockRequestIsRejected()
         {
-            var dlm = new Redlock(ConnectionMultiplexer.Connect("127.0.0.1:6379"));
+            var redlock = new Redlock(Connect());
 
-            Lock lockObject;
-            Lock newLockObject;
-            var locked = dlm.Lock(ResourceName, new TimeSpan(0, 0, 10), out lockObject);
+            var locked = redlock.Lock(ResourceName, new TimeSpan(0, 0, 10), out var lockObject);
             Assert.IsTrue(locked, "Unable to get lock");
-            locked = dlm.Lock(ResourceName, new TimeSpan(0, 0, 10), out newLockObject);
+            locked = redlock.Lock(ResourceName, new TimeSpan(0, 0, 10), out _);
             Assert.IsFalse(locked, "lock taken, it shouldn't be possible");
-            dlm.Unlock(lockObject);
+            redlock.Unlock(lockObject);
         }
 
         [Test]
         public void TestThatSequenceLockedUnlockedAndLockedAgainIsSuccessfull()
         {
-            var dlm = new Redlock(ConnectionMultiplexer.Connect("127.0.0.1:6379"));
+            var redlock = new Redlock(Connect());
 
-            Lock lockObject;
-            Lock newLockObject;
-            var locked = dlm.Lock(ResourceName, new TimeSpan(0, 0, 10), out lockObject);
+            var locked = redlock.Lock(ResourceName, new TimeSpan(0, 0, 10), out var lockObject);
             Assert.IsTrue(locked, "Unable to get lock");
-            dlm.Unlock(lockObject);
-            locked = dlm.Lock(ResourceName, new TimeSpan(0, 0, 10), out newLockObject);
+            redlock.Unlock(lockObject);
+            locked = redlock.Lock(ResourceName, new TimeSpan(0, 0, 10), out var newLockObject);
             Assert.IsTrue(locked, "Unable to get lock");
-            dlm.Unlock(newLockObject);
+            redlock.Unlock(newLockObject);
         }
+
+        private static IDatabaseAsync Connect() => ConnectionMultiplexer.Connect("127.0.0.1:6379").GetDatabase();
 
     }
 }
