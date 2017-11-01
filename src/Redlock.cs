@@ -122,11 +122,23 @@ namespace Redlock.CSharp
             return ForEachRedisRegistered(database => UnlockInstance(database, lockObject.Resource, lockObject.Value));
         }
 
-        private static async Task<bool> LockInstance(IDatabaseAsync database, string resource, byte[] val, TimeSpan ttl)
+        /// <summary>
+        /// Override in order to intercept all requests to Redis.  Usefull for tracking and auditing purposes
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="asyncAction"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        protected virtual Task<T> ExecuteAsync<T>(Func<Task<T>> asyncAction, string name)
+        {
+            return asyncAction();
+        }
+
+        private async Task<bool> LockInstance(IDatabaseAsync database, string resource, byte[] val, TimeSpan ttl)
         {
             try
             {
-                return await database.StringSetAsync(resource, val, ttl, When.NotExists);
+                return await ExecuteAsync(() => database.StringSetAsync(resource, val, ttl, When.NotExists), "Lock");
             }
             catch (Exception)
             {
@@ -134,15 +146,15 @@ namespace Redlock.CSharp
             }
         }
 
-        private static Task UnlockInstance(IDatabaseAsync database, string resource, byte[] val)
+        private async Task UnlockInstance(IDatabaseAsync database, string resource, byte[] val)
         {
             RedisKey[] key = { resource };
             RedisValue[] values = { val };
-            return database.ScriptEvaluateAsync(
+            await ExecuteAsync(() => database.ScriptEvaluateAsync(
                 UnlockScript,
                 key,
                 values
-            );
+            ), "Unlock");
         }
 
         private async Task ForEachRedisRegistered(Func<IDatabaseAsync, Task> action)
