@@ -57,7 +57,9 @@
     <Compile Include="..\TestHelper.cs">
       <Link>TestHelper.cs</Link>
     </Compile>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\v4.5\redlock-cs.v4.5.csproj">
