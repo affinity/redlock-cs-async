@@ -5,7 +5,7 @@ redlock-cs
 
 Distributed lock with Redis and C# (based on the [redlock algorithm](http://redis.io/topics/distlock))
 
-Redlock-cs is available through nuget as [redlock-cs package](http://www.nuget.org/packages/redlock-cs/).
+Redlock-cs is available through nuget as [redlock-cs-async package](https://www.nuget.org/packages/redlock-cs-async/).
 
 ## Usage
 
