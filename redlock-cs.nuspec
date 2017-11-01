@@ -4,9 +4,9 @@
     <id>redlock-cs-async</id>
     <version>$version$</version>
     <authors>collinsauve</authors>
-    <owners>collinsauve</owners>
-    <licenseUrl>https://raw.githubusercontent.com/collinsauve/redlock-cs/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/collinsauve/redlock-cs</projectUrl>
+    <owners>Nudge Software Inc</owners>
+    <licenseUrl>https://raw.githubusercontent.com/NudgeSoftware/redlock-cs-async/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/NudgeSoftware/redlock-cs-async</projectUrl>
     <iconUrl>http://wprediscache.com/wp-content/uploads/2014/07/icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Asynchronous distributed lock with Redis and C# (based on http://redis.io/topics/distlock)</description>
