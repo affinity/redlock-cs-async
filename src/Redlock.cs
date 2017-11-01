@@ -44,8 +44,8 @@ namespace Redlock.CSharp
         private const double ClockDriveFactor = 0.01;
         private readonly TimeSpan _defaultRetryDelay = TimeSpan.FromMilliseconds(200);
         private readonly IList<ConnectionMultiplexer> _connections;
-        private int Quorum { get { return (_connections.Count / 2) + 1; } }
-        
+        private int Quorum => (_connections.Count / 2) + 1;
+
         public Redlock(params ConnectionMultiplexer[] connections)
         {
             _connections = connections.ToList().AsReadOnly();
@@ -72,7 +72,7 @@ namespace Redlock.CSharp
                     var startTime = DateTime.Now;
 
                     // Use keys
-                    await for_each_redis_registered(
+                    await ForEachRedisRegistered(
                         async connection =>
                         {
                             if (await LockInstance(connection, resource, val, ttl)) n += 1;
@@ -92,7 +92,7 @@ namespace Redlock.CSharp
                         lockObject = new Lock(resource, val, validityTime);
                         return true;
                     }
-                    await for_each_redis_registered(connection => UnlockInstance(connection, resource, val));
+                    await ForEachRedisRegistered(connection => UnlockInstance(connection, resource, val));
                     return false;
                 }
                 catch (Exception)
@@ -111,7 +111,7 @@ namespace Redlock.CSharp
 
         public async Task UnlockAsync(Lock lockObject)
         {
-            await for_each_redis_registered(async connection => await UnlockInstance(connection, lockObject.Resource, lockObject.Value));
+            await ForEachRedisRegistered(async connection => await UnlockInstance(connection, lockObject.Resource, lockObject.Value));
         }
 
         public override string ToString()
@@ -129,7 +129,7 @@ namespace Redlock.CSharp
         }
 
         //TODO: Refactor passing a ConnectionMultiplexer
-        private static async Task<bool> LockInstance(ConnectionMultiplexer connection, string resource, byte[] val, TimeSpan ttl)
+        private static async Task<bool> LockInstance(IConnectionMultiplexer connection, string resource, byte[] val, TimeSpan ttl)
         {
             try
             {
@@ -154,7 +154,7 @@ namespace Redlock.CSharp
             );
         }
 
-        private async Task for_each_redis_registered(Func<ConnectionMultiplexer, Task> action)
+        private async Task ForEachRedisRegistered(Func<ConnectionMultiplexer, Task> action)
         {
             foreach (var connection in _connections)
             {
