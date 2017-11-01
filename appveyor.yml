@@ -1,4 +1,5 @@
 version: 2.0.{build}
+image: Visual Studio 2017
 configuration: Release
 assembly_info:
   patch: true
@@ -14,6 +15,8 @@ build:
 after_build:
 - cmd: nuget pack redlock-cs.nuspec -Properties "version=%APPVEYOR_BUILD_VERSION%"
 test:
-  assemblies: tests\v4.6\bin\Release\Redlock.CSharp.Tests.dll
+  assemblies:
+    only:
+    - tests\v4.6\bin\Release\Redlock.CSharp.Tests.dll
 artifacts:
 - path: redlock-cs-async.*.nupkg
