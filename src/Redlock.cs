@@ -68,17 +68,11 @@ namespace Redlock.CSharp
             {
                 try
                 {
-                    var n = 0;
+                    
                     var startTime = DateTime.Now;
 
                     // Use keys
-                    await ForEachRedisRegistered(async connection =>
-                    {
-                        if (await LockInstance(connection, resource, val, ttl))
-                        {
-                            n += 1;
-                        }
-                    });
+                    var quorum = await ForEachRedisRegisteredUntilQuorum(connection => LockInstance(connection, resource, val, ttl));
 
                     /*
                      * Add 2 milliseconds to the drift to account for Redis expires
@@ -88,7 +82,7 @@ namespace Redlock.CSharp
                     var drift = Convert.ToInt32(ttl.TotalMilliseconds * ClockDriveFactor + 2);
                     var validityTime = ttl - (DateTime.Now - startTime) - new TimeSpan(0, 0, 0, 0, drift);
 
-                    if (n >= Quorum && validityTime.TotalMilliseconds > 0)
+                    if (quorum && validityTime.TotalMilliseconds > 0)
                     {
                         lockObject = new Lock(resource, val, validityTime);
                         return true;
@@ -139,7 +133,6 @@ namespace Redlock.CSharp
             }
         }
 
-        //TODO: Refactor passing a ConnectionMultiplexer
         private static Task UnlockInstance(ConnectionMultiplexer connection, string resource, byte[] val)
         {
             RedisKey[] key = { resource };
@@ -150,6 +143,20 @@ namespace Redlock.CSharp
                 key,
                 values
             );
+        }
+
+        private async Task<bool> ForEachRedisRegisteredUntilQuorum(Func<ConnectionMultiplexer, Task<bool>> action)
+        {
+            var n = 0;
+            foreach (var connection in _connections)
+            {
+                var result = await action(connection);
+                if (result && ++n >= Quorum)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private async Task ForEachRedisRegistered(Func<ConnectionMultiplexer, Task> action)
