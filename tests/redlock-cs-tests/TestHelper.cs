@@ -9,7 +9,7 @@ namespace Redlock.CSharp.Tests
     {
         public static Process StartRedisServer(long port)
         {
-            var toolsPath = Path.Combine(GetRepoRoot(), @"packages\Redis-32.2.6.12.1\tools");
+            var toolsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @".nuget\packages\redis-32\2.6.12.1\tools");
             var fileName = Path.Combine(toolsPath, "redis-server.exe");
 
             // Launch Server

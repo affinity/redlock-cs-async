@@ -1,25 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redlock-cs.v4.5", "src\v4.5\redlock-cs.v4.5.csproj", "{C9765FBE-82AC-4A30-8B43-112A79957DC3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redlock-cs.v4.6", "src\v4.6\redlock-cs.v4.6.csproj", "{AA86C955-BDDE-4EFD-8599-19C71CEE7C71}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{67E6E906-E4E0-494E-AD81-7336ABE07D04}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
 		LICENSE = LICENSE
 		README.md = README.md
-		redlock-cs.nuspec = redlock-cs.nuspec
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{90F61C0F-155F-4D30-A663-768FA215987D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redlock-cs.tests.v4.5", "tests\v4.5\redlock-cs.tests.v4.5.csproj", "{2B892971-1410-4F89-B179-71B53132E6F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "redlock-cs", "src\redlock-cs\redlock-cs.csproj", "{343BBE75-CF73-4428-9460-8B41C21E4D82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redlock-cs.tests.v4.6", "tests\v4.6\redlock-cs.tests.v4.6.csproj", "{69738909-CBCD-4E48-AC2B-D3959E3B7B65}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redlock-cs-tests", "tests\redlock-cs-tests\redlock-cs-tests.csproj", "{A9B435FD-3120-4D8F-B17D-AE0DE15A29F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,28 +22,22 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C9765FBE-82AC-4A30-8B43-112A79957DC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C9765FBE-82AC-4A30-8B43-112A79957DC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C9765FBE-82AC-4A30-8B43-112A79957DC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C9765FBE-82AC-4A30-8B43-112A79957DC3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AA86C955-BDDE-4EFD-8599-19C71CEE7C71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AA86C955-BDDE-4EFD-8599-19C71CEE7C71}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AA86C955-BDDE-4EFD-8599-19C71CEE7C71}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AA86C955-BDDE-4EFD-8599-19C71CEE7C71}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2B892971-1410-4F89-B179-71B53132E6F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B892971-1410-4F89-B179-71B53132E6F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2B892971-1410-4F89-B179-71B53132E6F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2B892971-1410-4F89-B179-71B53132E6F8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{69738909-CBCD-4E48-AC2B-D3959E3B7B65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{69738909-CBCD-4E48-AC2B-D3959E3B7B65}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{69738909-CBCD-4E48-AC2B-D3959E3B7B65}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{69738909-CBCD-4E48-AC2B-D3959E3B7B65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{343BBE75-CF73-4428-9460-8B41C21E4D82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{343BBE75-CF73-4428-9460-8B41C21E4D82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{343BBE75-CF73-4428-9460-8B41C21E4D82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{343BBE75-CF73-4428-9460-8B41C21E4D82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9B435FD-3120-4D8F-B17D-AE0DE15A29F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9B435FD-3120-4D8F-B17D-AE0DE15A29F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9B435FD-3120-4D8F-B17D-AE0DE15A29F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9B435FD-3120-4D8F-B17D-AE0DE15A29F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{2B892971-1410-4F89-B179-71B53132E6F8} = {90F61C0F-155F-4D30-A663-768FA215987D}
-		{69738909-CBCD-4E48-AC2B-D3959E3B7B65} = {90F61C0F-155F-4D30-A663-768FA215987D}
+		{A9B435FD-3120-4D8F-B17D-AE0DE15A29F1} = {90F61C0F-155F-4D30-A663-768FA215987D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0B68CCF2-D15F-4583-8B6D-388444ABA039}
 	EndGlobalSection
 EndGlobal
