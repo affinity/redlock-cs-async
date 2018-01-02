@@ -17,4 +17,4 @@ test:
     only:
     - tests\v4.6\bin\Release\Redlock.CSharp.Tests.dll
 artifacts:
-- path: redlock-cs-async.*.nupkg
+- path: src\redlock-cs\bin\Release\redlock-cs-async.*.nupkg
