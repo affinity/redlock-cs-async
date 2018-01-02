@@ -5,10 +5,17 @@
     <PackageId>redlock-cs-async</PackageId>
     <PackageVersion>1.0.0</PackageVersion>
     <Authors>collinsauve</Authors>
-    <Description>Awesome application logging utility</Description>
+    <Description>Asynchronous distributed lock with Redis and C# (based on http://redis.io/topics/distlock)</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>    
-    <Copyright>Copyright 2018 (c) Contoso Corporation. All rights reserved.</Copyright>
-    <PackageTags>Redis StackExchange Async Redlock C#</PackageTags>
+    <Copyright></Copyright>
+    <PackageTags>redis redlock lock async</PackageTags>
+    <Company>Nudge Software Inc</Company>
+    <Product>redlock-cs-async</Product>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/NudgeSoftware/redlock-cs-async/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/NudgeSoftware/redlock-cs-async</PackageProjectUrl>
+    <PackageIconUrl>http://wprediscache.com/wp-content/uploads/2014/07/icon.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/NudgeSoftware/redlock-cs-async</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
