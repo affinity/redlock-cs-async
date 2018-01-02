@@ -7,13 +7,11 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
-before_build:
-- cmd: nuget restore
-build:
-  project: redlock-cs.sln
-  verbosity: minimal
-after_build:
-- cmd: nuget pack redlock-cs.nuspec -Properties "version=%APPVEYOR_BUILD_VERSION%"
+build_script:
+- cmd: >-
+    dotnet restore
+
+    dotnet pack /p:PackageVersion=%APPVEYOR_BUILD_VERSION%"
 test:
   assemblies:
     only:
