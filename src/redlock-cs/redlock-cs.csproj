@@ -4,7 +4,7 @@
     <TargetFramework>netstandard1.6</TargetFramework>
     <PackageId>redlock-cs-async</PackageId>
     <PackageVersion>1.0.0</PackageVersion>
-    <Authors>collinsauve</Authors>
+    <Authors>Nudge</Authors>
     <Description>Asynchronous distributed lock with Redis and C# (based on http://redis.io/topics/distlock)</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>    
     <Copyright></Copyright>
