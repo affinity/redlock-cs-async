@@ -22,7 +22,6 @@ using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace Redlock.CSharp
 {
@@ -74,7 +73,7 @@ namespace Redlock.CSharp
         {
             var val = CreateUniqueLockId();
             Lock lockObject = null;
-            var successfull = await Retry(DefaultRetryCount, _defaultRetryDelay, async () =>
+            var successful = await Retry(DefaultRetryCount, _defaultRetryDelay, async () =>
             {
                 try
                 {
@@ -92,7 +91,7 @@ namespace Redlock.CSharp
 
                     /*
                      * Add 2 milliseconds to the drift to account for Redis expires
-                     * precision, which is 1 milliescond, plus 1 millisecond min drift 
+                     * precision, which is 1 millisecond, plus 1 millisecond min drift 
                      * for small TTLs.        
                      */
                     var drift = Convert.ToInt32(ttl.TotalMilliseconds * ClockDriveFactor + 2);
@@ -112,7 +111,7 @@ namespace Redlock.CSharp
                 }
             });
 
-            return Tuple.Create(successfull, lockObject);
+            return Tuple.Create(successful, lockObject);
         }
 
         public void Unlock(Lock lockObject) => UnlockAsync(lockObject).Wait();
@@ -174,7 +173,7 @@ namespace Redlock.CSharp
             while (currentRetry++ < retryCount)
             {
                 if (await action()) return true;
-                Thread.Sleep(rnd.Next(maxRetryDelay));
+                await Task.Delay(rnd.Next(maxRetryDelay));
             }
             return false;
         }
