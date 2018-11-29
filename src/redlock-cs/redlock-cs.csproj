@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -16,10 +16,15 @@
     <PackageIconUrl>http://wprediscache.com/wp-content/uploads/2014/07/icon.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/NudgeSoftware/redlock-cs-async</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="StackExchange.Redis" Version="2.0.519" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All"/>
   </ItemGroup>
 
 </Project>
