@@ -107,6 +107,8 @@ namespace Redlock.CSharp
                 }
                 catch (Exception)
                 {
+                    // make sure we release any lock created on exception
+                    await ForEachRedisRegistered(database => UnlockInstance(database, resource, val));
                     return false;
                 }
             });
