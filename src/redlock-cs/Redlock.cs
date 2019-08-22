@@ -60,16 +60,7 @@ namespace Redlock.CSharp
             _databases = databases.ToList().AsReadOnly();
         }
 
-        public bool Lock(RedisKey resource, TimeSpan ttl, out Lock lockObject)
-        {
-            var task = LockAsync(resource, ttl);
-            task.Wait();
-            var result = task.Result;
-            lockObject = result.Item2;
-            return result.Item1;
-        }
-
-        public async Task<Tuple<bool, Lock>> LockAsync(RedisKey resource, TimeSpan ttl)
+        public async Task<(bool success, Lock @lock)> LockAsync(RedisKey resource, TimeSpan ttl)
         {
             var val = CreateUniqueLockId();
             Lock lockObject = null;
@@ -102,21 +93,22 @@ namespace Redlock.CSharp
                         lockObject = new Lock(resource, val, validityTime);
                         return true;
                     }
-                    await ForEachRedisRegistered(database => UnlockInstance(database, resource, val));
+                    await ForEachRedisRegistered(async database => await UnlockInstance(database, resource, val));
                     return false;
                 }
                 catch (Exception)
                 {
-                    // make sure we release any lock created on exception
-                    await ForEachRedisRegistered(database => UnlockInstance(database, resource, val));
                     return false;
                 }
             });
 
-            return Tuple.Create(successful, lockObject);
-        }
+            if (!successful)
+            {
+                await ForEachRedisRegistered(async database => await UnlockInstance(database, resource, val));
+            }
 
-        public void Unlock(Lock lockObject) => UnlockAsync(lockObject).Wait();
+            return (successful, lockObject);
+        }
 
         public Task UnlockAsync(Lock lockObject)
         {
@@ -124,7 +116,7 @@ namespace Redlock.CSharp
         }
 
         /// <summary>
-        /// Override in order to intercept all requests to Redis.  Usefull for tracking and auditing purposes
+        /// Override in order to intercept all requests to Redis.  Useful for tracking and auditing purposes
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="asyncAction"></param>

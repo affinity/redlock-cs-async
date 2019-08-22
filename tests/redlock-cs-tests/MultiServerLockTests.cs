@@ -4,6 +4,7 @@ using System.Linq;
 using NUnit.Framework;
 using StackExchange.Redis;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Redlock.CSharp.Tests
 {
@@ -35,29 +36,29 @@ namespace Redlock.CSharp.Tests
         }
 
         [Test]
-        public void TestWhenLockedAnotherLockRequestIsRejected()
+        public async Task TestWhenLockedAnotherLockRequestIsRejected()
         {
             var redlock = new Redlock(Connect());
 
-            var locked = redlock.Lock(ResourceName, new TimeSpan(0, 0, 10), out var lockObject);
-            Assert.IsTrue(locked, "Unable to get lock");
-            locked = redlock.Lock(ResourceName, new TimeSpan(0, 0, 10), out _);
-            Assert.IsFalse(locked, "lock taken, it shouldn't be possible");
-            redlock.Unlock(lockObject);
+            var (success, @lock) = await redlock.LockAsync(ResourceName, new TimeSpan(0, 0, 10));
+            Assert.IsTrue(success, "Unable to get lock");
+            var locked2 = await redlock.LockAsync(ResourceName, new TimeSpan(0, 0, 10));
+            Assert.IsFalse(locked2.success, "lock taken, it shouldn't be possible");
+            await redlock.UnlockAsync(@lock);
         }
 
         [Test]
-        public void TestThatSequenceLockedUnlockedAndLockedAgainIsSuccessfull()
+        public async Task TestThatSequenceLockedUnlockedAndLockedAgainIsSuccessful()
         {
             var redlock = new Redlock(Connect());
 
-            var locked = redlock.Lock(ResourceName, new TimeSpan(0, 0, 10), out var lockObject);
-            Assert.IsTrue(locked, "Unable to get lock");
-            redlock.Unlock(lockObject);
-            locked = redlock.Lock(ResourceName, new TimeSpan(0, 0, 10), out var newLockObject);
-            Assert.IsTrue(locked, "Unable to get lock");
+            var (success, @lock) = await redlock.LockAsync(ResourceName, new TimeSpan(0, 0, 10));
+            Assert.IsTrue(success, "Unable to get lock");
+            await redlock.UnlockAsync(@lock);
+            var (success2, lock2) = await redlock.LockAsync(ResourceName, new TimeSpan(0, 0, 10));
+            Assert.IsTrue(success2, "Unable to get lock");
 
-            redlock.Unlock(newLockObject);
+            await redlock.UnlockAsync(lock2);
         }
 
         private static IEnumerable<IDatabaseAsync> Connect()
